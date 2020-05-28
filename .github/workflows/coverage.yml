@@ -1,0 +1,77 @@
+name: Cython coverage
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  Cython.Coverage.Plugin:
+    name: 'Bug cython/cython#3636 demo'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Switch to using Python 3.8 by default
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install sqlite
+      run: sudo apt update && sudo apt install sqlite
+    - name: Check out src from Git
+      uses: actions/checkout@v2
+    - name: Set up a virtualenv
+      run: python -m venv .venv
+    - name: Install Coverage and Cython
+      run: .venv/bin/python -m pip install coverage Cython
+    - name: Cythonize pyx modules
+      env:
+        CFLAGS: -DCYTHON_TRACE=1
+      run: >-
+        .venv/bin/cythonize
+        --inplace
+        --directive=embedsignature=True
+        --directive=emit_code_comments=True
+        --directive=linetrace=True
+        --directive=profile=True
+        **/*.pyx
+    - name: Build and install Python dist in non-editable mode
+      run: .venv/bin/python -m pip install .
+    - name: Show the dist install details
+      run: .venv/bin/python -m pip show Demo
+    - name: Log the site-packages contents
+      run: ls -Ralh .venv/lib/python*/site-packages/*call_mymath*
+    - name: Collect coverage
+      run: .venv/bin/python -m coverage run -m test_cython
+    - name: Report coverage (ignoring errors)
+      run: .venv/bin/python -m coverage report -i
+    - name: Report coverage (failing on errors)
+      run: .venv/bin/python -m coverage report
+    - name: Log coverage DB tables
+      if: always()
+      run: sqlite3 .coverage '.tables'
+    - name: Log coverage DB arc table
+      if: always()
+      run: sqlite3 .coverage 'select * from arc'
+    - name: Log coverage DB context table
+      if: always()
+      run: sqlite3 .coverage 'select * from context'
+    - name: Log coverage DB coverage_schema table
+      if: always()
+      run: sqlite3 .coverage 'select * from coverage_schema'
+    - name: Log coverage DB file table
+      if: always()
+      run: sqlite3 .coverage 'select * from file'
+    - name: Log coverage DB line_bits table
+      if: always()
+      run: sqlite3 .coverage 'select * from line_bits'
+    - name: Log coverage DB meta table
+      if: always()
+      run: sqlite3 .coverage 'select * from meta'
+    - name: Log coverage DB tracer table
+      if: always()
+      run: sqlite3 .coverage 'select * from tracer'
+    - name: Store the complete cwd state as an artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-project-data-dir
+        path: .
