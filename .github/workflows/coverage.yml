@@ -5,8 +5,8 @@ on:
   pull_request:
 
 jobs:
-  Cython.Coverage.Plugin:
-    name: 'Bug cython/cython#3636 demo'
+  cython-coverage-plugin:
+    name: Cython.Coverage.Plugin cython/cython#3636 bug demo
     runs-on: ubuntu-latest
 
     steps:
