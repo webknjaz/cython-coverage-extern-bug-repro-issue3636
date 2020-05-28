@@ -7,4 +7,4 @@ plugins = Cython.Coverage
 source =
   call_mymath
   flat_ns_call_mymath
-  test
+  test_cython
