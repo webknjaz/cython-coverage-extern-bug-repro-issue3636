@@ -18,8 +18,8 @@ def dumbtrace(frame, event, args):
 import call_mymath
 import call_mymath.call_mymath
 from call_mymath.call_mymath import call_sinc
-import flat_ns_call_mymath
-from flat_ns_call_mymath import call_sinc as flat_ns_call_sinc
+import call_mymath.flat_ns_call_mymath
+from call_mymath.flat_ns_call_mymath import call_sinc as flat_ns_call_sinc
 
 
 print('call_mymath package is located at:')
@@ -27,7 +27,7 @@ print(call_mymath.__file__)
 print('call_mymath.call_mymath module is located at:')
 print(call_mymath.call_mymath.__file__)
 print('flat_ns_call_mymath package is located at:')
-print(flat_ns_call_mymath.__file__)
+print(call_mymath.flat_ns_call_mymath.__file__)
 
 
 print('calling call_sinc(7):')

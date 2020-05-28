@@ -29,7 +29,7 @@ ext_modules = cythonize([
         extra_compile_args=['-DCYTHON_TRACE=1']
     ),
     Extension(
-        "flat_ns_call_mymath",
+        "call_mymath.flat_ns_call_mymath",
         sources=["src/flat_ns_call_mymath.pyx"],
         include_dirs=[os.getcwd()],  # path to .h file(s)
         library_dirs=[os.getcwd()],  # path to .a or .so file(s)
