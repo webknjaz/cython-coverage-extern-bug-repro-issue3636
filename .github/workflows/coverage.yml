@@ -21,7 +21,7 @@ jobs:
     - name: Set up a virtualenv
       run: python -m venv .venv
     - name: Install Coverage and Cython
-      run: .venv/bin/python -m pip install coverage Cython
+      run: .venv/bin/python -m pip install coverage git+https://github.com/rhpvorderman/cython.git@fix-3636
     - name: Cythonize pyx modules
       env:
         CFLAGS: -DCYTHON_TRACE=1
